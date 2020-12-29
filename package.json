@@ -1,0 +1,19 @@
+{
+  "name": "music-library-api",
+  "version": "1.0.0",
+  "description": "Lucy's Bangers from the past few decades",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ironmongrrrl/music-library-api.git"
+  },
+  "author": "Lucy Ironmonger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ironmongrrrl/music-library-api/issues"
+  },
+  "homepage": "https://github.com/ironmongrrrl/music-library-api#readme"
+}
