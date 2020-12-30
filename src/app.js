@@ -1,4 +1,4 @@
-//SETUP
+// SETUP
 const express = require("express");
 
 const app = express();
