@@ -20,6 +20,7 @@ describe("/artists", () => {
     }
   });
 
+  // POST ARTISTS TO DATABASE
   describe("POST /artists", async () => {
     it("creates a new artist in the database", async () => {
       const response = await request(app).post("/artists").send({
@@ -35,6 +36,95 @@ describe("/artists", () => {
       });
       expect(insertedArtistRecords.name).to.equal("Tame Impala");
       expect(insertedArtistRecords.genre).to.equal("Rock");
+    });
+  });
+
+  // GET ARTIST RESULTS FROM DATABASE
+  describe("with artists in the database", () => {
+    let artists;
+    beforeEach((done) => {
+      Promise.all([
+        Artist.create({ name: "Tame Impala", genre: "Rock" }),
+        Artist.create({ name: "Kylie Minogue", genre: "Pop" }),
+        Artist.create({ name: "Dave Brubeck", genre: "Jazz" }),
+      ]).then((documents) => {
+        artists = documents;
+        done();
+      });
+    });
+
+    describe("GET /artists", () => {
+      it("gets all artist records", (done) => {
+        request(app)
+          .get("/artists")
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.length).to.equal(3);
+            res.body.forEach((artist) => {
+              const expected = artists.find((a) => a.id === artist.id);
+              expect(artist.name).to.equal(expected.name);
+              expect(artist.genre).to.equal(expected.genre);
+            });
+            done();
+          });
+      });
+
+      describe("GET /artists/:artistId", () => {
+        it("gets artist record by id", (done) => {
+          const artist = artists[0];
+          request(app)
+            .get(`/artists/${artist.id}`)
+            .then((res) => {
+              expect(res.status).to.equal(200);
+              expect(res.body.name).to.equal(artist.name);
+              expect(res.body.genre).to.equal(artist.genre);
+              done();
+            });
+        });
+
+        it("returns a 404 if the artist does not exist", (done) => {
+          request(app)
+            .get("/artists/12345")
+            .then((res) => {
+              expect(res.status).to.equal(404);
+              expect(res.body.error).to.equal("the artist could not be found.");
+              done();
+            });
+        });
+      });
+      describe("PATCH /artists/:id", () => {
+        it("updates artist genre by id", (done) => {
+          const artist = artists[0];
+          request(app)
+            .patch(`/artists/${artist.id}`) //locating by req.params
+            .send({ genre: "Psychedelic Rock" }) // sending in req.body
+            .then((res) => {
+              expect(res.status).to.equal(200);
+              Artist.findByPk(artist.id, { raw: true }).then(
+                (updatedArtist) => {
+                  expect(updatedArtist.genre).to.equal("Psychedelic Rock");
+                  done();
+                });
+            });
+        });
+        describe("PATCH /artists/:id", () => {
+          it("updates artist name by id", (done) => {
+            const artist = artists[0];
+            request(app)
+              .patch(`/artists/${artist.id}`) //locating by req.params
+              .send({ name: "Nina Simone" }) // sending in req.body
+              .then((res) => {
+                expect(res.status).to.equal(200);
+                Artist.findByPk(artist.id, { raw: true }).then(
+                  (updatedArtist) => {
+                    expect(updatedArtist.name).to.equal("Nina Simone");
+                    expect(updatedArtist.genre).to.not.equal("Psychedelic Rock");
+                    done();
+                  });
+              });
+          });
+      });
+    });
     });
   });
 });
