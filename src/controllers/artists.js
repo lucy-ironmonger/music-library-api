@@ -12,7 +12,7 @@ const find = (req, res) => {
   const { artistId } = req.params;
   Artist.findByPk(artistId).then((artist) => {
     if (!artist) {
-      res.status(404).json({ error: "the artist could not be found." });
+      res.status(404).json({ error: "GET the artist could not be found." });
     } else {
       res.status(200).json(artist);
     }
@@ -21,11 +21,12 @@ const find = (req, res) => {
  
 const update = (req, res) => {
   const { id } = req.params;
+  console.log(id);
   Artist.update(req.body, { where: { id } }).then(([updatedArtist]) => {
+    console.log(updatedArtist)
     if (!updatedArtist) {
-      res.status(404).json({ error: "The artist could not be found." });
+      res.status(404).json({ error: "PATCH the artist could not be found." });
     } else {
-      console.log("Updated artist record.");
       Artist.findByPk(id).then((updatedArtist) => res.status(200).json(updatedArtist));
     }
   });

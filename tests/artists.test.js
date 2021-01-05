@@ -2,6 +2,7 @@ const { expect } = require("chai");
 const request = require("supertest");
 const { Artist } = require("../src/models");
 const app = require("../src/app");
+const artist = require("../src/models/artist");
 
 describe("/artists", () => {
   before(async () => {
@@ -53,6 +54,7 @@ describe("/artists", () => {
       });
     });
 
+    // GET REQUESTS
     describe("GET /artists", () => {
       it("gets all artist records", (done) => {
         request(app)
@@ -68,63 +70,90 @@ describe("/artists", () => {
             done();
           });
       });
+    });
 
-      describe("GET /artists/:artistId", () => {
-        it("gets artist record by id", (done) => {
-          const artist = artists[0];
-          request(app)
-            .get(`/artists/${artist.id}`)
-            .then((res) => {
-              expect(res.status).to.equal(200);
-              expect(res.body.name).to.equal(artist.name);
-              expect(res.body.genre).to.equal(artist.genre);
-              done();
-            });
-        });
-
-        it("returns a 404 if the artist does not exist", (done) => {
-          request(app)
-            .get("/artists/12345")
-            .then((res) => {
-              expect(res.status).to.equal(404);
-              expect(res.body.error).to.equal("the artist could not be found.");
-              done();
-            });
-        });
+    describe("GET /artists/:artistId", () => {
+      it("gets artist record by id", (done) => {
+        const artist = artists[0];
+        request(app)
+          .get(`/artists/${artist.id}`)
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.name).to.equal(artist.name);
+            expect(res.body.genre).to.equal(artist.genre);
+            done();
+          });
       });
-      describe("PATCH /artists/:id", () => {
-        it("updates artist genre by id", (done) => {
-          const artist = artists[0];
-          request(app)
-            .patch(`/artists/${artist.id}`) //locating by req.params
-            .send({ genre: "Psychedelic Rock" }) // sending in req.body
-            .then((res) => {
-              expect(res.status).to.equal(200);
-              Artist.findByPk(artist.id, { raw: true }).then(
-                (updatedArtist) => {
-                  expect(updatedArtist.genre).to.equal("Psychedelic Rock");
-                  done();
-                });
-            });
-        });
-        describe("PATCH /artists/:id", () => {
-          it("updates artist name by id", (done) => {
-            const artist = artists[0];
-            request(app)
-              .patch(`/artists/${artist.id}`) //locating by req.params
-              .send({ name: "Nina Simone" }) // sending in req.body
-              .then((res) => {
-                expect(res.status).to.equal(200);
-                Artist.findByPk(artist.id, { raw: true }).then(
-                  (updatedArtist) => {
-                    expect(updatedArtist.name).to.equal("Nina Simone");
-                    expect(updatedArtist.genre).to.not.equal("Psychedelic Rock");
-                    done();
-                  });
-              });
+
+      it("returns a 404 if the artist does not exist", (done) => {
+        // const artist = artists[0] // check it was failing
+        request(app)
+          // .get(`/artists/${artist.id}`) // check it was failing
+          .get("/artists/12345")
+          .then((res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal(
+              "GET the artist could not be found."
+            );
+            done();
+          })
+          .catch((error) => {
+            done(error);
           });
       });
     });
+
+    // PATCH REQUESTS
+    describe("PATCH /artists/:id", () => {
+      it("updates artist genre by id", (done) => {
+        const artist = artists[0];
+        request(app)
+          .patch(`/artists/${artist.id}`) //locating by req.params
+          .send({ genre: "Psychedelic Rock" }) // sending in req.body
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            Artist.findByPk(artist.id, { raw: true }).then((updatedArtist) => {
+              expect(updatedArtist.genre).to.equal("Psychedelic Rock");
+              done();
+            });
+          });
+      });
+
+      it("updates artist name by id", (done) => {
+        const artist = artists[0];
+        request(app)
+          .patch(`/artists/${artist.id}`) //locating by req.params
+          .send({ name: "Nina Simone" }) // sending in req.body
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            Artist.findByPk(artist.id, { raw: true }).then((updatedArtist) => {
+              expect(updatedArtist.name).to.equal("Nina Simone");
+              expect(updatedArtist.genre).to.not.equal("Psychedelic Rock");
+              done();
+            });
+          });
+      });
+
+      it("returns a 404 if the artist does not exist", (done) => {
+        // const artist = artists[0];
+        Artist.findAll({}, { raw : true}).then((artistDocuments) => {
+          console.log(artistDocuments)
+          request(app)
+            .patch(`/artists/${artistDocuments[0].id}`)
+            // .patch("/artists/12345")
+            .then((res) => {
+              expect(res.status).to.equal(404);
+              expect(res.body.error).to.equal(
+                "PATCH the artist could not be found."
+              );
+              // const artist = artists;
+              done();
+            })
+            .catch((error) => {
+              done(error);
+            });
+        });
+      });
     });
   });
 });
