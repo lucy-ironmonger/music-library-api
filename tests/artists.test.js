@@ -158,7 +158,6 @@ describe("/artists", () => {
     describe('DELETE /artists/:artistID', () => {
       it('deletes artist record by id', (done) => {
         const artist = artists[0];
-        console.log(artist)
         request(app)
           .delete(`/artists/${artist.id}`)
           .then((res) => {
