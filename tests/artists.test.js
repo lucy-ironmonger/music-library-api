@@ -108,8 +108,8 @@ describe("/artists", () => {
       it("updates artist genre by id", (done) => {
         const artist = artists[0];
         request(app)
-          .patch(`/artists/${artist.id}`) 
-          .send({ genre: "Psychedelic Rock" }) 
+          .patch(`/artists/${artist.id}`) //locating by req.params
+          .send({ genre: "Psychedelic Rock" }) // sending in req.body
           .then((res) => {
             expect(res.status).to.equal(200);
             Artist.findByPk(artist.id, { raw: true }).then((updatedArtist) => {
@@ -145,6 +145,7 @@ describe("/artists", () => {
               expect(res.body.error).to.equal(
                 "PATCH the artist could not be found."
               );
+              // const artist = artists;
               done();
             })
             .catch((error) => {

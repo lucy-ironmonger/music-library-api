@@ -1,4 +1,10 @@
 node_modules
+<<<<<<< HEAD
 .env
 .env.test
 .DS_Store
+=======
+.DS_Store
+.env
+.env.test
+>>>>>>> 25201885b857d15969b1c799db22ec4dd5fe837e

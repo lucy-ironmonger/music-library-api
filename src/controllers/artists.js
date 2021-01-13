@@ -21,7 +21,9 @@ const find = (req, res) => {
  
 const update = (req, res) => {
   const { id } = req.params;
+  console.log(id);
   Artist.update(req.body, { where: { id } }).then(([updatedArtist]) => {
+    console.log(updatedArtist)
     if (!updatedArtist) {
       res.status(404).json({ error: "PATCH the artist could not be found." });
     } else {
