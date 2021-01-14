@@ -161,16 +161,22 @@ describe("/artists", () => {
         request(app)
           .delete(`/artists/${artist.id}`)
           .then((res) => {
+            console.log(res.body)
             expect(res.status).to.equal(204);
-            Artist.findByPk(artist.id, { raw: true }).then((deletedArtist) => {
+            Artist.findByPk(artist.id, { raw: true })
+              .then((deletedArtist) => {
               expect(deletedArtist).to.equal(null);
               done();
             })
             .catch((error) => {
               done(error);
             });
+            }).catch((error) => {
+              done(error);
             });
           });
+
+
         });
   });
 });
