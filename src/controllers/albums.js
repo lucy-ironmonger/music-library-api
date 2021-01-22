@@ -2,7 +2,7 @@
 const { Album, Artist } = require("../models");
 
 // POST REQUEST (MATCHING ARTIST ID VALIDATION CARRIED OUT PRIOR)
-const createAlbum = (request, response) => {
+const create = (request, response) => {
   let artist;
   Artist.findByPk(request.params.artistId)
   .then(selectedArtist => { artist = selectedArtist })
@@ -20,7 +20,7 @@ const createAlbum = (request, response) => {
   }
 
 module.exports = {
-  createAlbum,
+  create,
 }
 
 
