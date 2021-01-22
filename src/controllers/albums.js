@@ -1,19 +1,26 @@
-const { Album } = require("../models");
+// REQUIRES ALBUM
+const { Album, Artist } = require("../models");
 
-
-// UPDATE (U)
-const createAlbum = (req, res) => {
-  const { artistId } = req.params;
-  Album.update(req.body, { where: { artist: artistId } }).then(([updatedArtist]) => {
-    if (!updatedArtist) {
-      res.status(404).json({ error: "ADD ALBUM the artist could not be found." });
-    } else {
-      Album.findByPk(id).then((updatedAlbum) => res.status(200).json(updatedAlbum));
-    }
-  });
-};
-
+// POST REQUEST (MATCHING ARTIST ID VALIDATION CARRIED OUT PRIOR)
+const createAlbum = (request, response) => {
+  let artist;
+  Artist.findByPk(request.params.artistId)
+  .then(selectedArtist => { artist = selectedArtist })
+  .then(() => {
+    return Album.create({
+    name: request.body.name,
+    year: request.body.year
+  })}) 
+    .then(album => { 
+      album.setArtist(artist)
+      .then(nestedUpdatedAlbum => {
+        response.status(201).json(nestedUpdatedAlbum)
+      })}) 
+    .catch(error => console.error('There is an error creating the album', error));
+  }
 
 module.exports = {
-  createAlbum
-};
+  createAlbum,
+}
+
+

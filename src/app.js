@@ -1,28 +1,19 @@
 // SETUP
-const express = require("express");
+const express = require('express');
 
 const app = express();
 
-app.use(express.json());
+// Examples of application level middleware
+app.use(express.json()); // express middleware for parsing application/json
 
-const artistController = require("./controllers/artists.js")
-const albumController = require("./controllers/albums.js")
 
-//TEST
-app.get("/", (req, res) => {
-  res.status(201).send("Hello world");
-});
+// REQUIRE THE ROUTES
+const artistRouter = require('./routes/artists')
+const albumRouter = require('./routes/albums')
 
-app.post('/artists', artistController.create); 
 
-app.get('/artists', artistController.list);
-
-app.get('/artists/:artistId', artistController.find);
-
-app.patch('/artists/:id', artistController.update);
-
-app.delete('/artists/:artistID', artistController.artistDelete);
-
-app.post('/artists/:artistId/albums', albumController.createAlbum); 
+// RUN USING VALIDATION
+app.use('/artists', artistRouter)
+app.use('/albums', albumRouter) 
 
 module.exports = app;

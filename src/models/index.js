@@ -14,11 +14,13 @@ const setupDatabase = () => {
 
   const Artist = ArtistModel(connection, Sequelize);
   const Album = AlbumModel(connection, Sequelize);
-  Album.belongsTo(Artist, { as: 'artist' });
+
+  Album.belongsTo(Artist, { as: 'artist' }); // ALBUM HAS A KEY CALLED ARTIST : ID (LINKED TO ARTIST PK)
 
   connection.sync({ alter: true });
   return {
-    Artist
+    Artist,
+    Album,
   };
 };
 
