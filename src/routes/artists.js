@@ -1,5 +1,8 @@
 // EXPRESS MAGIC 
-const artistRouter = require('express').Router()
+const artistRouter = require('express').Router({mergeParams: true})
+
+// PULLS IN THE ALBUM ROUTER
+const albumRouter = require('./albums')
 
 // PULLS IN THE CONTROLLER FUNCTIONS FOR THE ARTIST
 const { 
@@ -19,13 +22,16 @@ const logging = require('../middleware/logging')
 //   });
 
 
-// WITH VALIDATION 
+// ARTIST PATH VALIDATION
 artistRouter.get('/', logging, list);
 artistRouter.get('/:artistId', logging, find);
 artistRouter.post('/', logging, create); 
 artistRouter.patch('/:artistId', logging, update);
 artistRouter.delete('/:artistId', logging, artistDelete);
 
+// ARTIST THEN ALBUM PATH VALIDATION
+artistRouter.get('/', albumRouter);
+artistRouter.get('/:artistId', albumRouter);
 
 // EXPORTS OUT BACK TO APP.JS
 module.exports = artistRouter;

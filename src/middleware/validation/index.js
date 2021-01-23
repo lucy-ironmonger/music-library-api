@@ -15,13 +15,13 @@ const checkArtistId = (request, response, next) => {
     })
   }
   
-const checkAlbumId = (req, res, next) => {
+const checkAlbumId = (request, response, next) => {
     Album.findByPk(req.params.albumId)
     .then(album => {
       if(!album) {
-        res.status(404).send({error: 'The album could not found' })
+        response.status(404).send({error: 'The album could not found' })
       } else {
-        res.locals.album = album
+        response.locals.album = album
         return next()
       }
     })
