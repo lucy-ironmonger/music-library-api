@@ -117,8 +117,6 @@ beforeEach((done) => {
                 .then((res) => {
                     expect(res.status).to.equal(200);
                     expect(res.body.length).to.equal(5);
-                    console.log(albums[0])
-                    console.log(artists)
                     done();
                 })
                 .catch((error) => done(error));

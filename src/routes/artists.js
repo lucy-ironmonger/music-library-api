@@ -23,11 +23,12 @@ const logging = require('../middleware/logging')
 
 
 // ARTIST PATH VALIDATION
-artistRouter.get('/', logging, list);
-artistRouter.get('/:artistId', logging, find);
-artistRouter.post('/', logging, create); 
-artistRouter.patch('/:artistId', logging, update);
-artistRouter.delete('/:artistId', logging, artistDelete);
+artistRouter
+  .get('/', logging, list)
+  .get('/:artistId', logging, find)
+  .post('/', logging, create)
+  .patch('/:artistId', logging, update)
+  .delete('/:artistId', logging, artistDelete);
 
 
 // EXPORTS OUT BACK TO APP.JS

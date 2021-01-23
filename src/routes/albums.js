@@ -11,8 +11,9 @@ const { checkArtistId } = require('../middleware/validation')
 const { create, albumList } = require('../controllers/albums')
 
 // RUNS THE ROUTES, USING THE MIDDLEWARE WE HAVE PULLED IN FOR LOGGING AND VALIDATION
-albumRouter.post('/:artistId/albums', logging, checkArtistId, create);
-albumRouter.get('/', logging, albumList);
+albumRouter
+  .post('/:artistId/albums', logging, checkArtistId, create)
+  .get('/', logging, albumList);
 
 // EXPORTS OUT BACK TO APP.JS
 module.exports = albumRouter;
