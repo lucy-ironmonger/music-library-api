@@ -29,9 +29,6 @@ artistRouter.post('/', logging, create);
 artistRouter.patch('/:artistId', logging, update);
 artistRouter.delete('/:artistId', logging, artistDelete);
 
-// ARTIST THEN ALBUM PATH VALIDATION
-artistRouter.get('/', albumRouter);
-artistRouter.get('/:artistId', albumRouter);
 
 // EXPORTS OUT BACK TO APP.JS
 module.exports = artistRouter;
