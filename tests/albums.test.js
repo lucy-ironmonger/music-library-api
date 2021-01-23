@@ -78,59 +78,51 @@ describe("/albums", () => {
   ///////////////////////////
   // READING THE ALBUMS (GET)
   ///////////////////////////
-
-  // Feed artists into the tests
-  describe("setting up some artists and associated albums for testing", () => {
-    let artists;
+  describe("populate albums in the database", () => {
     let albums;
-  
+    let artists;
+
     beforeEach((done) => {
-      Promise.all([
-        Artist.create({ name: "DjRUM", genre: "Electronic" }),
-        Artist.create({ name: "Daniel Avery", genre: "Drone" }),
-        Artist.create({ name: "Studnitzky", genre: "Jazz" }),
-      ]).then((artistDocuments) => {
-        artists = artistDocuments;
-      });
-      done();
-    });
-
-      beforeEach((done) => {
+      Promise.all(
         Promise.all([
-          Album.create({ name: "Portrait with Firewood", year: 2018 }).then(album => album.setArtist(artists[0])),
-          Album.create({ name: "Seven Lies", year: 2013 }).then(album => album.setArtist(artists[0])),
-          Album.create({ name: "Drone Logic", year: 2013 }).then(album => album.setArtist(artists[1])),
-          Album.create({ name: "New Energy Collected Remixes", year: 2015 }).then(album => album.setArtist(artists[1])),
-          Album.create({ name: "KY Do Mar", year: 2012 }).then(album => album.setArtist(artists[2]))
-          ])
-          .then((documents) => {
-          albums = documents;
-        });
-        console.log(albums)
+          Artist.create({ name: "DjRUM", genre: "Electronic" }),
+          Artist.create({ name: "Daniel Avery", genre: "Drone" }),
+          Artist.create({ name: "Studnitzky", genre: "Jazz" }),
+        ]).then((artistDocuments) => {
+          artists = artistDocuments;
         done();
-      });
+      })
+  );
+});
 
-      describe("GET /albums", () => {
-        it("gets all albums in the database", (done) => {
-          request(app)
-            .get("/albums")
-            .then((response) => {
-              expect(response.status).to.equal(200);
-              expect(response.body.length).to.equal(5);
-              response.body.forEach(album => {
-                const expected = albums.find((a) => a.id === album.id);
-                expect(album.artistName).to.equal(expected.artistName);
-                expect(album.year).to.equal(expected.year);
-                expect(album.artistId).to.equal(expected.artistId);
-              });
-              console.log(albums)
-              done();
-            })
-            .catch((error) => done(error));
+beforeEach((done) => {
+  Promise.all(
+  Promise.all([
+    Album.create({ name: "Portrait with Firewood", year: 2018 }).then(album => album.setArtist(artists[0])),
+    Album.create({ name: "Seven Lies", year: 2013 }).then(album => album.setArtist(artists[0])),
+    Album.create({ name: "Drone Logic", year: 2013 }).then(album => album.setArtist(artists[1])),
+    Album.create({ name: "New Energy Collected Remixes", year: 2015 }).then(album => album.setArtist(artists[1])),
+    Album.create({ name: "KY Do Mar", year: 2012 }).then(album => album.setArtist(artists[2])),
+       ]).then((documents) => {
+      albums = documents;
+      done();
+  })
+);
+});
+
+    describe('GET /albums', () => {
+        it('Lists all albums', (done) => {
+            request(app)
+                .get('/albums')
+                .then((res) => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body.length).to.equal(5);
+                    console.log(albums[0])
+                    console.log(artists)
+                    done();
+                })
+                .catch((error) => done(error));
         });
-      }); // CLOSE of DESCRIBE GET ALBUMS
-
-
-
-    }); // SET ALBUMS IN DATABASE - KEEP TIL END
-  }); // SET ARTISTS IN DATABASE - KEEP TIL END 
+    })
+  })
+});
