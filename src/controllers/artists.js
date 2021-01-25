@@ -71,8 +71,6 @@ const artistDelete = (request, response) => {
 //   .catch(error => console.error('there is an error in artistDelete', error))
 // }
 
-
-
 module.exports = {
   create,
   list,

@@ -31,9 +31,28 @@ const create = (request, response) => {
   .catch(error => console.error('LIST: ERROR', error))
 }
 
+  //////////////////////////////
+  // PATCH REQUEST FOR ALL ALBUMS
+  /////////////////////////////
+
+  const updateAlbum = (request, response) => {
+    // const { artistId } = request.params.artistId; // store the artist path
+    const { albumId } = request.params; // store the album path
+    Album.update(request.body, { where: { id : albumId } })   // Update the album, taking the provided req.body and updating where the albumId matches
+    .then(([updatedRows]) => {
+      if (!updatedRows) {
+        response.status(400).json({error: 'The album cannot be found in order to update'});
+      } else {
+        response.status(200).json(updatedRows)
+      }
+    })
+    }
+
+
 module.exports = {
   create,
   albumList,
+  updateAlbum,
 }
 
 

@@ -29,9 +29,9 @@ describe("/albums", () => {
     }
   });
 
-  ///////////////////////////
-  // CREATING ALBUMS (POST)
-  ///////////////////////////
+  /////////////////////////////
+  // CREATES THE ALBUMS (POST)
+  /////////////////////////////
 
   describe("POST /artists/:artistId/albums", () => {
     it("creates a new album for a given artist", (done) => {
@@ -41,10 +41,10 @@ describe("/albums", () => {
           name: "InnerSpeaker",
           year: 2010,
         })
-        .then((res) => {
-          expect(res.status).to.equal(201);
+        .then((response) => {
+          expect(response.status).to.equal(201);
 
-          Album.findByPk(res.body.id, { raw: true })
+          Album.findByPk(response.body.id, { raw: true })
             .then((album) => {
               expect(album.name).to.equal("InnerSpeaker");
               expect(album.year).to.equal(2010);
@@ -63,9 +63,9 @@ describe("/albums", () => {
           name: "InnerSpeaker",
           year: 2010,
         })
-        .then((res) => {
-          expect(res.status).to.equal(404);
-          expect(res.body.error).to.equal("The artist could not be found.");
+        .then((response) => {
+          expect(response.status).to.equal(404);
+          expect(response.body.error).to.equal("The artist could not be found.");
 
           Album.findAll().then((albums) => {
             expect(albums.length).to.equal(0);
@@ -75,9 +75,10 @@ describe("/albums", () => {
     });
   });
 
-  ///////////////////////////
-  // READING THE ALBUMS (GET)
-  ///////////////////////////
+  //////////////////////////
+  // READS THE ALBUMS (GET)
+  /////////////////////////
+
   describe("populate albums in the database", () => {
     let albums;
     let artists;
@@ -114,13 +115,37 @@ beforeEach((done) => {
         it('Lists all albums', (done) => {
             request(app)
                 .get('/albums')
-                .then((res) => {
-                    expect(res.status).to.equal(200);
-                    expect(res.body.length).to.equal(5);
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    expect(response.body.length).to.equal(5);
                     done();
                 })
                 .catch((error) => done(error));
         });
+    })
+
+
+  //////////////////////////////
+  // UPDATES THE ALBUMS (PATCH)
+  /////////////////////////////
+
+describe('PATCH /albums/:albumId', () => {
+  it ('Updates an album if you change the album information', (done) => {
+    const album = albums[0]
+    request(app)
+      .patch(`/albums/${album.id}`)
+      .send({ name: "Portrait with Firewood", year: 2020 })
+      .then((response) => {
+        expect(response.status).to.equal(200);
+        Album.findByPk(album.id, { raw: true }).then((updatedAlbum) => {
+        expect(updatedAlbum.year).to.equal(2020);
+        done();
+      })
+      .catch(error => done(error));
+  })
+})
+
+  // KEEP AT BOTTOM
     })
   })
 });

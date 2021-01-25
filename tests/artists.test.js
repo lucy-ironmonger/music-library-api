@@ -21,8 +21,11 @@ describe("/artists", () => {
     }
   });
 
-  // POST ARTISTS TO DATABASE
-  describe("POST /artists", async () => {
+  /////////////////////////////////
+  // CREATING ARTISTS (POST) IN DB
+  /////////////////////////////////
+
+   describe("POST /artists", async () => {
     it("creates a new artist in the database", async () => {
       const response = await request(app).post("/artists").send({
         name: "Tame Impala",
@@ -40,7 +43,10 @@ describe("/artists", () => {
     });
   });
 
-  // GET ARTIST RESULTS FROM DATABASE
+  //////////////////////////////////////////////
+  // READING THE ARTISTS (GET) FROM DB - SETUP
+  /////////////////////////////////////////////
+
   describe("set artists in the database", () => {
     let artists;
     beforeEach((done) => {
@@ -54,7 +60,10 @@ describe("/artists", () => {
       });
     });
 
+    /////////////////
     // GET REQUESTS
+    /////////////////
+
     describe("GET /artists", () => {
       it("gets all artist records", (done) => {
         request(app)
@@ -103,7 +112,10 @@ describe("/artists", () => {
       });
     });
 
-    // PATCH REQUESTS
+    ///////////////////////////////////
+    // UPDATE THE ARTIST (PATCH) IN DB
+    ///////////////////////////////////
+
     describe("PATCH /artists/:id", () => {
       it("updates artist genre by id", (done) => {
         const artist = artists[0];
@@ -153,8 +165,11 @@ describe("/artists", () => {
             });
         });
       });
-    
 
+    ////////////////////////////
+    // DELETES THE ARTIST IN DB
+    ////////////////////////////
+    
     describe('DELETE /artists/:artistID', () => {
       it('deletes artist record by id', (done) => {
         const artist = artists[0];
